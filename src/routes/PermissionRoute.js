@@ -28,13 +28,16 @@ const PermissionRoute = props => {
       <HashRouter>
         <Switch>
           {routes.map(c => {
+            console.log(c);
             return <Route
               key={c.path}
-              path={!c.childrens?.length ? c.path : `${c.path}/*`}
+              path={!c.childrens?.length ? c.path : `${c.path}`}
+              exact={!!c.exact}
               // path={c.path}
-              exact
               render={cp => {
+                console.log('cp', cp)
                 if (c.redirect) {
+                  console.log(123)
                   return <Redirect to={c.redirect} />
                 }
                 return <>

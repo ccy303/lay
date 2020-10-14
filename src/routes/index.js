@@ -30,6 +30,7 @@ const Page2 = MyLoadable(() =>
 export const routes = [
   {
     path: "/",
+    exact: true,
     redirect: '/login'
   },
   {
@@ -64,7 +65,7 @@ export const routes = [
         component: Page1,
       },
       {
-        path: "/page/:id",
+        path: "/page/page2",
         title: "页面2",
         menu: true,
         userAuth: ['user', 'admin'],
