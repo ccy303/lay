@@ -30,8 +30,8 @@ const Page2 = MyLoadable(() =>
 export const routes = [
   {
     path: "/",
-    exact: true,
-    redirect: '/login'
+    redirect: '/login',
+    exact: true
   },
   {
     path: "/login",
@@ -46,7 +46,7 @@ export const routes = [
     title: "非权限路由",
     menu: true,
     userAuth: ['user', 'admin'],
-    layout: DashboardComponents,
+    wrappers: [DashboardComponents],
     component: Home,
   },
   {
@@ -54,23 +54,24 @@ export const routes = [
     menu: true,
     path: "/page",
     userAuth: ['user', 'admin'],
-    layout: DashboardComponents,
+    component: DashboardComponents,
     childrens: [
       {
         path: "/page/page1",
         title: "页面1",
         menu: true,
         userAuth: ['user', 'admin'],
-        layout: DashboardComponents,
         component: Page1,
-      },
-      {
+      }, {
         path: "/page/page2",
         title: "页面2",
         menu: true,
         userAuth: ['user', 'admin'],
-        layout: DashboardComponents,
         component: Page2,
+      }, {
+        path: "*",
+        title: "404",
+        component: NoMatchComponents,
       }
     ]
   },

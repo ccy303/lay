@@ -21,132 +21,58 @@ const getMenu = (routes, menu = []) => {
   return menu;
 };
 
-const PermissionRoute = props => {
-  const [menu, setMenu] = useState(getMenu(routes));
-  const renderRoute = () => {
-    const ele = <>
-      <HashRouter>
-        <Switch>
-          {routes.map(c => {
-            console.log(c);
-            return <Route
-              key={c.path}
-              path={!c.childrens?.length ? c.path : `${c.path}`}
-              exact={!!c.exact}
-              // path={c.path}
-              render={cp => {
-                console.log('cp', cp)
-                if (c.redirect) {
-                  console.log(123)
-                  return <Redirect to={c.redirect} />
-                }
-                return <>
-                  {c.layout ?
-                    <c.layout menu={menu}>
-                      {c.childrens ?
-                        <Switch>
-                          {c.childrens?.map(r => {
-                            return <Route path={r.path} exact key={r.path} render={rp => {
-                              return <r.component />;
-                            }} />;
-                          })}
-                        </Switch> :
-                        <c.component />
-                      }
-                    </c.layout> :
-                    <c.component />
-                  }
-                </>
-                // if (c.redirect) { return <Redirect from={c.path} to={c.redirect} />; }
-                // return <>
-                //   {
-                //     // c.layout ?
-                //     //   <c.layout menu={menu}>
-                //     //     {c.childrens ?
-                //     //       <Switch>
-                //     //         {c.childrens?.map(r => {
-                //     //           return <Route path={r.path} exact key={r.path} render={rp => {
-                //     //             if (r.redirect) {
-                //     //               return <Redirect from={r.path} to={r.redirect} />;
-                //     //             }
-                //     //             return <r.component />;
-                //     //           }} />;
-                //     //         })}
-                //     //       </Switch> :
-                //     //       <c.component />
-                //     //     }
-                //     //   </c.layout> :
-                //       <c.component />
-                //   }
-                // </>;
-              }} />;
-          })}
-        </Switch>
-      </HashRouter>
-    </>;
-    return ele;
-  };
-  return renderRoute();
+const render = (route, props) => {
+  const { component: Component, wrappers, childrens } = route;
+  const routes = renderRoute(childrens || []);
+  if (Component) {
+    let ret = <Component>{routes}</Component>;
+    if (wrappers) {
+      let len = wrappers.length - 1;
+      while (len >= 0) {
+        ret = React.createElement(wrappers[len], {}, ret);
+        len -= 1;
+      }
+    }
+    return ret;
+  }
+  return routes;
 };
 
-// return <>
-//   <HashRouter>
-//     <Switch>
-//       {AppRoutes.routes.map(r => {
-//         return <Route
-//           key={r.path}
-//           path={r.path}
-//           render={rp => {
-//             return status === 'pending' ?
-//               <Loading /> :
-//               r.layout ?
-//                 <r.layout
-//                   menu={menu}
-//                 >
-//                   <Switch>
-//                     {flatRoute?.map(c => <Route
-//                       exact
-//                       key={c.path}
-//                       path={c.path}
-//                       render={cp => {
-//                         const { setRoutePath, setMenuProps, menuProps } = props.CommonStore;
-//                         const { path: matchPat, url: path } = cp.match;
-//                         if (c.loginAuth && !info) {
-//                           return <Redirect to='/login' />;
-//                         }
-//                         setRoutePath({
-//                           matchPat,
-//                           path,
-//                         });
-//                         const { openKeys } = menuProps;
-//                         // 此处有一个问题：Route渲染时，会替换原来的layout,但mobx监听的还是旧的layout数据变化
-//                         // 所以会产生react警告：渲染不同的组件时，不能更新组件，
-//                         // 暂时解决方案：异步事件队列，用setTimeOut包裹事件，等dom加载完步后触发异步
-//                         setTimeout(() => {
-//                           setMenuProps('selectedKeys', [c.key]);
-//                           setMenuProps('openKeys', Array.from(
-//                             new Set([...openKeys, ...[c.key?.split('-')[0]]])
-//                           ));
-//                         });
-//                         return <c.component
-//                           key={props.CommonStore.getMenuConfig.activePath}
-//                           {...cp}
-//                           setVal2Url={setVal2Url}
-//                           getUrl2Val={getUrl2Val}
-//                         />;
-//                       }}
-//                     />)}
-//                   </Switch>
-//                 </r.layout> :
-//                 <r.component {...rp} />;
-//           }}
-//         />;
-//       })}
-//     </Switch>
-//   </HashRouter>
-//   {props.CommonStore.httpRequest && <Loading delay="500" />}
-// </>;
-// };
+const getRouteElement = (route, index) => {
+  const newProp = {
+    key: route.key || index,
+    path: route.path,
+    exact: !!route.exact,
+    strict: !!route.strict
+  };
+  if (route.redirect) {
+    return <Redirect {...newProp} from={route.path} to={route.redirect} />;
+  }
+  return <Route {...newProp} render={props => render(route, props)} />;
+};
+
+const renderRoute = (route) => {
+  return <Switch>
+    {route.map((r, i) => {
+      return getRouteElement(r, i);
+    })}
+  </Switch>;
+};
+
+export const MenuContext = React.createContext([]);
+
+const PermissionRoute = props => {
+  const [menu, setMenu] = useState([]);
+  useEffect(() => {
+    // 此处可以从服务端获取menu
+    setMenu(getMenu(routes));
+  }, []);
+  return <HashRouter>
+    <MenuContext.Provider value={menu}>
+      {renderRoute(routes)}
+    </MenuContext.Provider>
+  </HashRouter>;
+};
 
 const Loading = props => {
   return <div style={{
