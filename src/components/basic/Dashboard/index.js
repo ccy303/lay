@@ -15,7 +15,7 @@ const LayoutUI = props => {
       collapsed={collapsed}
     >
       <div styleName="logo" />
-      <Menu menu={props.menu} />
+      <Menu />
     </Layout.Sider>
     <Layout styleName="fullHeight overflow-hidden">
       <Layout.Header styleName="header">

@@ -74,6 +74,31 @@ export const routes = [
         component: NoMatchComponents,
       }
     ]
+  }, {
+    title: "非权限路由1",
+    menu: true,
+    path: "/info",
+    userAuth: ['user', 'admin'],
+    component: DashboardComponents,
+    childrens: [
+      {
+        path: "/info/page1",
+        title: "info1",
+        menu: true,
+        userAuth: ['user', 'admin'],
+        component: Page1,
+      }, {
+        path: "/info/page2",
+        title: "info2",
+        menu: true,
+        userAuth: ['user', 'admin'],
+        component: Page2,
+      }, {
+        path: "*",
+        title: "404",
+        component: NoMatchComponents,
+      }
+    ]
   },
   {
     path: "*",
