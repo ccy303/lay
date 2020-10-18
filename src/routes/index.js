@@ -16,7 +16,10 @@ const LoginComponent = MyLoadable(() =>
   import(/* webpackChunkName: 'Login' */ "../components/business/Login")
 );
 const NoMatchComponents = MyLoadable(() =>
-  import(/* webpackChunkName: "NoMatch" */ "../components/business/NoMatch")
+  import(/* webpackChunkName: "NoMatch" */ "../components/basic/NoMatch")
+);
+const NoAuthComponents = MyLoadable(() =>
+  import(/* webpackChunkName: "NoAuth" */ "../components/basic/NoAuth")
 );
 const Home = MyLoadable(() =>
   import(/* webpackChunkName: "home" */ "../components/business/home")
@@ -36,7 +39,6 @@ export const routes = [
   {
     path: "/login",
     title: "登录",
-    loginAuth: false,
     layout: null,
     menu: false,
     component: LoginComponent,
@@ -46,6 +48,7 @@ export const routes = [
     title: "非权限路由",
     menu: true,
     userAuth: ['user', 'admin'],
+    loginAuth: true,
     wrappers: [DashboardComponents],
     component: Home,
   },
@@ -53,14 +56,14 @@ export const routes = [
     title: "非权限路由1",
     menu: true,
     path: "/page",
-    userAuth: ['user', 'admin'],
+    loginAuth: true,
     component: DashboardComponents,
     childrens: [
       {
         path: "/page/page1",
         title: "页面1",
         menu: true,
-        userAuth: ['user', 'admin'],
+        userAuth: ['user'],
         component: Page1,
       }, {
         path: "/page/page2",
@@ -78,7 +81,7 @@ export const routes = [
     title: "非权限路由1",
     menu: true,
     path: "/info",
-    userAuth: ['user', 'admin'],
+    loginAuth: true,
     component: DashboardComponents,
     childrens: [
       {
@@ -99,6 +102,11 @@ export const routes = [
         component: NoMatchComponents,
       }
     ]
+  },
+  {
+    path: "/403",
+    title: "403",
+    component: NoAuthComponents,
   },
   {
     path: "*",

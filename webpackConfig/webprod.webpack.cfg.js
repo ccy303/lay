@@ -1,33 +1,43 @@
 /* global __dirname */
 const path = require('path');
 const webpack = require('webpack');
-const Fiber = require('fibers');
-const cfg = require('./index');
-const svgr = require('@svgr/webpack')
+// const Fiber = require('fibers');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+ 
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// "caihrc": "0.1.8",
+// "fibers": "^4.0.1",
+
 // webpack 配置
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
-    app: ['./src/index.js']
+    app: './src/index.js'
   },
   output: {
-    path: path.join(__dirname, '../static'), // 出口目录，dist文件
-    publicPath: "/static/",
-    filename: 'js/[name].js',
-    chunkFilename: 'js/[name].chunk.js'
+    path: path.join(__dirname, '../../static'), // 出口目录，dist文件
+    publicPath: "../",
+    filename: 'js/[name].[chunkhash].js',
+    chunkFilename: 'js/[name].chunk.[chunkhash].js'
   },
-  devtool: 'cheap-module-source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
         // exclude: /node_modules/,
-        use: ['babel-loader', 'eslint-loader']
+        use: {
+          loader: 'babel-loader'
+        }
       },
       {
         test: /\.scss$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -49,7 +59,7 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               implementation: require('sass'), // 使用dart-sass去编译
-              fiber: Fiber // 同步的库，使用dart-sass同步编译的速度是异步编译的2倍
+              // fiber: Fiber // 同步的库，使用dart-sass同步编译的速度是异步编译的2倍
             }
           }, {
             loader: 'sass-resources-loader', // 全局scss变量插件
@@ -62,7 +72,7 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
-          'style-loader',
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -84,8 +94,23 @@ module.exports = {
       },
       {
         test: /\.less$/,
+        // use: [{
+        //   loader: "style-loader"
+        // }, {
+        //   loader: "css-loader", options: {
+        //     sourceMap: true
+        //   }
+        // }, {
+        //   loader: "less-loader",
+        //   options: {
+        //     lessOptions: {
+        //       javascriptEnabled: true,
+        //     },
+        //     sourceMap: true
+        //   }
+        // }]
         use: [
-          "style-loader",
+          MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
             options: {
@@ -139,34 +164,42 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    // new BundleAnalyzerPlugin()
-    new webpack.DefinePlugin({
-      NODE_ENV: JSON.stringify('development')
-    })
-  ],
   resolve: {
-    // 自动补全后缀，注意第一个必须是空字符串,后缀一定以点开头
     extensions: ['.js', '.json', '.css'],
     alias: {
       '@root': path.resolve(__dirname, '../'),
       '@src': path.resolve(__dirname, '../', 'src')
     }
   },
-  devServer: {
-    port: cfg.webport, // 端口
-    host: 'localhost',
-    historyApiFallback: {
-      disableDotRule: true
-    },
-    compress: true,
-    hot: true,
-    // 反代配置
-    proxy: {
-      '/admin': {
-        target: cfg.apiHost,
-        changeOrigin: true
-      }
-    }
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './public/template.html',
+      filename: 'index.html',
+      favicon: "./favicon.ico"
+    }),
+    new CleanWebpackPlugin({ verbose: true }),
+    new MiniCssExtractPlugin({
+      filename: "css/[name].[contenthash].css",
+      chunkFilename: "css/[name].[contenthash].css"
+    }),
+    new webpack.DefinePlugin({
+      NODE_ENV: JSON.stringify('production')
+    }),
+    new CompressionPlugin({
+      test: new RegExp(
+        '\\.(js|css)$' // 压缩 js 与 css
+      )
+    })
+    // new BundleAnalyzerPlugin()
+  ],
+  optimization: {
+    minimizer: [
+      // 压缩js
+      new TerserPlugin({
+        parallel: true
+      }),
+      // 压缩css
+      new OptimizeCSSAssetsPlugin({})
+    ]
   }
 };

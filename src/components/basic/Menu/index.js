@@ -6,17 +6,24 @@ import { MenuContext } from '@src/routes/PermissionRoute';
 import './styles.scss';
 const { SubMenu } = Menu;
 
-let menu_open_keys = [];
-
+let MENU_OPEN_KEYS = [];
 const MenuCom = props => {
-  const menus = useContext(MenuContext);
-  const [openKeys, setOpenKeys] = useState(Array.from(new Set([...menu_open_keys, useRouteMatch().path])));
-  const onOpenChange = (e) => {
-    setOpenKeys((state) => {
-      menu_open_keys = Array.from(new Set([...e, ...state]));
-      return menu_open_keys
+  const [menus, setMenu] = useState([]);
+  const getMenus = useContext(MenuContext);
+  useEffect(() => {
+    getMenus().then(res => {
+      setMenu(res);
     });
-  }
+  }, []);
+  const [openKeys, setOpenKeys] = useState(
+    Array.from(new Set([...MENU_OPEN_KEYS, useRouteMatch().path]))
+  );
+  const onOpenChange = (e) => {
+    setOpenKeys(() => {
+      MENU_OPEN_KEYS = Array.from(new Set([...e]));
+      return MENU_OPEN_KEYS;
+    });
+  };
   return <Menu
     mode="inline"
     theme="dark"
@@ -24,7 +31,7 @@ const MenuCom = props => {
     openKeys={openKeys}
     onOpenChange={onOpenChange}
   >
-    {menus.map((item, i) => {
+    {menus?.map((item, i) => {
       return item.childrens?.length ?
         <SubMenu
           key={item.path}

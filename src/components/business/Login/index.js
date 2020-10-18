@@ -22,7 +22,7 @@ const LoginCom = props => {
       key: 'captcha',
       placeholder: '请输入验证码',
       errorMsg: '请输入验证码',
-      src: `/admin/sys/user/imageCode`,
+      src: `/`,
     },
     showEnglish: false,
     register: { hasItem: false },
@@ -33,6 +33,9 @@ const LoginCom = props => {
     },
     handleLogin: (values, successCb, failCb) => {
       setLoading(true);
+      sessionStorage.setItem('login', true);
+      sessionStorage.setItem('useAuth', 'admin');
+      props.history.push('/home');
     }
   };
   return <>
