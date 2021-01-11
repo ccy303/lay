@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
-import { useRouteMatch } from "react-router-dom";
 import { MenuContext } from '@src/routes/PermissionRoute';
 import './styles.scss';
 const { SubMenu } = Menu;
@@ -18,9 +17,7 @@ const MenuCom = props => {
       });
     });
   }, []);
-  const [openKeys, setOpenKeys] = useState(
-    Array.from(new Set([...MENU_OPEN_KEYS, useRouteMatch().path]))
-  );
+  const [openKeys, setOpenKeys] = useState([]);
   const onOpenChange = (e) => {
     setOpenKeys(() => {
       MENU_OPEN_KEYS = Array.from(new Set([...e]));
@@ -47,10 +44,19 @@ const MenuCom = props => {
     })}</>;
   };
 
+  useEffect(() => {
+    setOpenKeys(() => {
+      let arr = [];
+      if (context.ACTIVE_ROUTE?.length > 1) {
+        arr = context.ACTIVE_ROUTE.slice(0, -1).map(v => v.path);
+      }
+      return Array.from(new Set([...MENU_OPEN_KEYS, ...arr]));
+    });
+  }, [context.ACTIVE_ROUTE]);
+
   return <Menu
     mode="inline"
     theme="dark"
-    // selectedKeys={[useLocation()?.pathname]}
     selectedKeys={[lastRoute[0]?.activeMenuPath || lastRoute[0]?.path]}
     openKeys={openKeys}
     onOpenChange={onOpenChange}

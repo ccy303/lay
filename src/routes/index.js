@@ -18,8 +18,8 @@ const Page1 = MyLoadable(() =>
 const Page2 = MyLoadable(() =>
   import(/* webpackChunkName: "Page2" */ "../components/business/page2")
 );
-const Page3 = MyLoadable(() =>
-  import(/* webpackChunkName: "Page3" */ "../components/business/page3")
+const List = MyLoadable(() =>
+  import(/* webpackChunkName: "List" */ "../components/business/list")
 );
 export const routes = [
   {
@@ -53,14 +53,14 @@ export const routes = [
     component: DashboardComponents,
     childrens: [{
       path: "/singlePage/page1",
-      title: "二级路由集合1",
+      title: "二级路由1",
       menu: true,
       exact: true,
       userAuth: ['order:check'],
       component: Page1,
     }, {
       path: "/singlePage/page2",
-      title: "二级路由集合2",
+      title: "二级路由2",
       menu: true,
       exact: true,
       userAuth: ['order:check'],
@@ -76,7 +76,7 @@ export const routes = [
     component: DashboardComponents,
     childrens: [{
       path: "/multistage/page",
-      title: "二级级路由",
+      title: "二级路由",
       menu: true,
       childrens: [{
         path: "/multistage/page/page1",
@@ -85,8 +85,28 @@ export const routes = [
         exact: true,
         component: Page1,
       }],
-    },
-    ]
+    }]
+  }, {
+    title: "非菜单路由",
+    menu: true,
+    path: "/noMenuRoute",
+    canBreadcrumb: true,
+    loginAuth: true,
+    component: DashboardComponents,
+    childrens: [{
+      path: "/noMenuRoute/page1",
+      title: "列表",
+      menu: true,
+      exact: true,
+      component: List,
+    }, {
+      path: "/noMenuRoute/page2",
+      title: "二级路由1",
+      activeMenuPath: '/noMenuRoute/page1',
+      menu: false,
+      exact: true,
+      component: Page1,
+    }]
   },
   {
     path: "/403",
