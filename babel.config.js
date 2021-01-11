@@ -15,7 +15,7 @@ module.exports = function (api) {
     "@babel/plugin-proposal-nullish-coalescing-operator",
     "@babel/plugin-proposal-optional-chaining",
     ["import", {
-      libraryName: 'caihrc',
+      libraryName: 'antd',
       // libraryDirectory: 'es',
       style: true
     }, "caihrc"],

@@ -87,28 +87,6 @@
   }
 }
 
-.ant-table-cell {
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
-.resize-none {
-  resize: none;
-
-  textarea {
-    resize: none;
-  }
-}
-
-.hidden {
-  display: none;
-}
-
-// ie下禁用select弹出动画，会引起两次闪烁
-@media only screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-  .ant-dropdown,
-  .ant-select-dropdown,
-  .ant-picker-dropdown {
-      animation-duration: 0s !important;
-  }
+.ant-menu-item {
+  margin-top: 0 !important;
 }

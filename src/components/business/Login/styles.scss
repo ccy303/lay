@@ -9,7 +9,11 @@
   justify-content: flex-end;
   align-items: center;
   .login-box {
-    margin-right: 95px;
+    width: 350px;
+    padding: 0 30px 30px;
+    background: #fff;
+    border-radius: 6px;
+    margin-right: 100px;
     border-radius: 2px;
     float: right;
     h3 {

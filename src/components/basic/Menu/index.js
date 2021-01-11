@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu } from 'caihrc';
-import { useLocation, useRouteMatch } from "react-router-dom";
+import { Menu } from 'antd';
+import { useRouteMatch } from "react-router-dom";
 import { MenuContext } from '@src/routes/PermissionRoute';
 import './styles.scss';
 const { SubMenu } = Menu;
@@ -9,10 +9,13 @@ const { SubMenu } = Menu;
 let MENU_OPEN_KEYS = [];
 const MenuCom = props => {
   const [menus, setMenu] = useState([]);
-  const getMenus = useContext(MenuContext);
+  const context = useContext(MenuContext);
+  const lastRoute = context.ACTIVE_ROUTE?.slice(-1) || [];
   useEffect(() => {
-    getMenus().then(res => {
-      setMenu(res);
+    setTimeout(() => {
+      context.MENU().then(res => {
+        setMenu(res);
+      });
     });
   }, []);
   const [openKeys, setOpenKeys] = useState(
@@ -24,26 +27,15 @@ const MenuCom = props => {
       return MENU_OPEN_KEYS;
     });
   };
-  return <Menu
-    mode="inline"
-    theme="dark"
-    selectedKeys={[useLocation()?.pathname]}
-    openKeys={openKeys}
-    onOpenChange={onOpenChange}
-  >
-    {menus?.map((item, i) => {
+
+  const renderMenu = (menus) => {
+    return <>{menus.map((item, i) => {
       return item.childrens?.length ?
         <SubMenu
           key={item.path}
           title={<span>{item.title}</span>}
         >
-          {item.childrens.map(child => {
-            return <Menu.Item key={child.path}>
-              <Link to={child.path}>
-                <span>{child.title}</span>
-              </Link>
-            </Menu.Item>;
-          })}
+          {renderMenu(item.childrens)}
         </SubMenu> :
         <Menu.Item
           key={item.path}
@@ -52,7 +44,19 @@ const MenuCom = props => {
             <span>{item.title}</span>
           </Link>
         </Menu.Item>;
-    })}
+    })}</>;
+  };
+
+  return <Menu
+    mode="inline"
+    theme="dark"
+    // selectedKeys={[useLocation()?.pathname]}
+    selectedKeys={[lastRoute[0]?.activeMenuPath || lastRoute[0]?.path]}
+    openKeys={openKeys}
+    onOpenChange={onOpenChange}
+    onClick={() => { context.CLEAR_ACTIVE_ROUTE(); }}
+  >
+    {renderMenu(menus)}
   </Menu>;
 };
 

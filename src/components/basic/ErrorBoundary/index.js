@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.scss';
-import { Button } from 'caihrc';
+import { Button } from 'antd';
 import {
   BugOutlined
 } from '@ant-design/icons';

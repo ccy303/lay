@@ -1,17 +1,5 @@
-// 代码分割
-import Loadable from "react-loadable";
-// loading组件
-import Loading from "../components/basic/Loading";
-// layout模块(lazy会造成每次切换页面加载layout时，layout被视为全新的chunk，导致重复渲染问题)
+import MyLoadable from "../components/basic/Loadable";
 import DashboardComponents from "../components/basic/Dashboard";
-
-
-const MyLoadable = (func) => Loadable({
-  loader: func,
-  loading: Loading,
-  delay: 300,
-});
-
 const LoginComponent = MyLoadable(() =>
   import(/* webpackChunkName: 'Login' */ "../components/business/Login")
 );
@@ -22,18 +10,22 @@ const NoAuthComponents = MyLoadable(() =>
   import(/* webpackChunkName: "NoAuth" */ "../components/basic/NoAuth")
 );
 const Home = MyLoadable(() =>
-  import(/* webpackChunkName: "home" */ "../components/business/home")
+  import(/* webpackChunkName: "Home" */ "../components/business/Home")
 );
 const Page1 = MyLoadable(() =>
-  import(/* webpackChunkName: "page1" */ "../components/business/page1")
+  import(/* webpackChunkName: "Page1" */ "../components/business/page1")
 );
 const Page2 = MyLoadable(() =>
-  import(/* webpackChunkName: "page2" */ "../components/business/page2")
+  import(/* webpackChunkName: "Page2" */ "../components/business/page2")
+);
+const Page3 = MyLoadable(() =>
+  import(/* webpackChunkName: "Page3" */ "../components/business/page3")
 );
 export const routes = [
   {
     path: "/",
-    redirect: '/login',
+    redirect: '/home',
+    loginAuth: true,
     exact: true
   },
   {
@@ -44,73 +36,68 @@ export const routes = [
     component: LoginComponent,
   },
   {
-    path: "/home",
-    title: "非权限路由",
+    title: "一级路由",
     menu: true,
-    userAuth: ['user', 'admin'],
+    path: "/home",
     loginAuth: true,
     wrappers: [DashboardComponents],
     component: Home,
   },
   {
-    title: "非权限路由1",
+    title: "二级路由集合",
     menu: true,
-    path: "/page",
+    path: "/singlePage",
+    userAuth: ['order:check'],
+    canBreadcrumb: true,
     loginAuth: true,
     component: DashboardComponents,
-    childrens: [
-      {
-        path: "/page/page1",
-        title: "页面1",
-        menu: true,
-        userAuth: ['user'],
-        component: Page1,
-      }, {
-        path: "/page/page2",
-        title: "页面2",
-        menu: true,
-        userAuth: ['user', 'admin'],
-        component: Page2,
-      }, {
-        path: "*",
-        title: "404",
-        component: NoMatchComponents,
-      }
-    ]
-  }, {
-    title: "非权限路由1",
+    childrens: [{
+      path: "/singlePage/page1",
+      title: "二级路由集合1",
+      menu: true,
+      exact: true,
+      userAuth: ['order:check'],
+      component: Page1,
+    }, {
+      path: "/singlePage/page2",
+      title: "二级路由集合2",
+      menu: true,
+      exact: true,
+      userAuth: ['order:check'],
+      component: Page2,
+    }]
+  },
+  {
+    path: "/multistage",
+    title: "三级路由集合",
     menu: true,
-    path: "/info",
+    canBreadcrumb: true,
     loginAuth: true,
     component: DashboardComponents,
-    childrens: [
-      {
-        path: "/info/page1",
-        title: "info1",
+    childrens: [{
+      path: "/multistage/page",
+      title: "二级级路由",
+      menu: true,
+      childrens: [{
+        path: "/multistage/page/page1",
+        title: "三级路由",
         menu: true,
-        userAuth: ['user', 'admin'],
+        exact: true,
         component: Page1,
-      }, {
-        path: "/info/page2",
-        title: "info2",
-        menu: true,
-        userAuth: ['user', 'admin'],
-        component: Page2,
-      }, {
-        path: "*",
-        title: "404",
-        component: NoMatchComponents,
-      }
+      }],
+    },
     ]
   },
   {
     path: "/403",
-    title: "403",
+    title: "无权限",
+    wrappers: [DashboardComponents],
     component: NoAuthComponents,
   },
   {
     path: "*",
-    title: "404",
+    title: "页面不存在",
+    wrappers: [DashboardComponents],
     component: NoMatchComponents,
   },
 ];

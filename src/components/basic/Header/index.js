@@ -1,20 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, Message, Modal, Form, Input, Dropdown, Avatar } from 'caihrc';
+import React, { useState } from 'react';
+import { Menu, Modal, Form, Input, Dropdown, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { useHistory } from "react-router-dom";
 
 import './styles.scss';
 
 const Header = ({ toggle, collapsed, CommonStore }) => {
-  const history = useHistory();
   const [changePwdModel, setChangePwdModel] = useState(false);
   const logout = () => {
-    // httpLoginOut().then(res => {
-    //   if (res.code !== '0000') return false;
-    //   // CommonStore.setLoginInfo('info', null);
-    //   Message.success('退出成功');
-    //   history.push('/login');
-    // });
   };
   const changePwd = () => {
     setChangePwdModel(true);
@@ -23,10 +15,6 @@ const Header = ({ toggle, collapsed, CommonStore }) => {
     setChangePwdModel(false);
   };
   const onOk = (v) => {
-    // changePass(v).then(res => {
-    //   setChangePwdModel(false);
-    //   res.code === '0000' && Message.success('修改成功');
-    // });
   };
   return <>
     <UI
@@ -54,13 +42,18 @@ const UI = props => {
       退出系统
     </Menu.Item>
   </Menu>;
-  return <div styleName="header-right">
-    <Dropdown overlay={DropMenu}>
-      <span styleName="nameBox hoverBox">
-        <Avatar styleName="avatar" size="small" icon={<UserOutlined />} />
-        <span>您好！{props.roleName}</span>
-      </span>
-    </Dropdown>
+  return <div styleName="warp">
+    <div styleName="header-left">
+      <div styleName="logo">logo:ccy</div>
+    </div>
+    <div styleName="header-right">
+      <Dropdown overlay={DropMenu}>
+        <span styleName="nameBox hoverBox">
+          <Avatar styleName="avatar" size="small" icon={<UserOutlined />} />
+          <span>您好！{props.roleName}</span>
+        </span>
+      </Dropdown>
+    </div>
   </div>;
 };
 
