@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu } from 'antd';
 import { MenuContext } from '@src/routes/PermissionRoute';
-import './styles.scss';
+import './styles.less';
 const { SubMenu } = Menu;
 
 let MENU_OPEN_KEYS = [];

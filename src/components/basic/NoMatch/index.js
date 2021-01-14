@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './styles.scss';
+import './styles.less';
 
 const NoMatch = () => {
   return <div styleName="no-match-wrap" >

@@ -1,7 +1,7 @@
 import React from 'react';
 import Footer from '../../basic/Footer';
 import { Form, Button, Input, Checkbox } from 'antd';
-import './styles.scss';
+import './styles.less';
 const LoginCom = props => {
   const onFinish = (e) => {
     props.history.replace('/home');

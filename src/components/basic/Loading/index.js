@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import NProgress from 'nprogress';
-import '../../../styles/common.scss';
+import '../../../styles/common.less';
 
 const Loading = (props) => {
   useEffect(() => {

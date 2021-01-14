@@ -8,20 +8,16 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
- 
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-// "caihrc": "0.1.8",
-// "fibers": "^4.0.1",
 
-// webpack 配置
+
 module.exports = {
   mode: 'production',
   entry: {
     app: './src/index.js'
   },
   output: {
-    path: path.join(__dirname, '../../static'), // 出口目录，dist文件
-    publicPath: "../",
+    path: path.join(__dirname, '../dist'), // 出口目录，dist文件
+    publicPath: "/",
     filename: 'js/[name].[chunkhash].js',
     chunkFilename: 'js/[name].chunk.[chunkhash].js'
   },
@@ -33,41 +29,6 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]-[hash:base64:10]',
-                getLocalIdent: (context, localIdentName, localName) => {
-                  const path = context._module.context;
-                  if (/^((?!node_modules).)*(src){1}.*(components){1}.*$/.test(path)) {
-                    return;
-                  } else {
-                    return localName;
-                  }
-                },
-              },
-            },
-          },
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              implementation: require('sass'), // 使用dart-sass去编译
-              // fiber: Fiber // 同步的库，使用dart-sass同步编译的速度是异步编译的2倍
-            }
-          }, {
-            loader: 'sass-resources-loader', // 全局scss变量插件
-            options: {
-              resources: path.join(__dirname, '../src/styles/variable.scss')
-            }
-          }
-        ]
       },
       {
         test: /\.css$/,
@@ -94,21 +55,6 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        // use: [{
-        //   loader: "style-loader"
-        // }, {
-        //   loader: "css-loader", options: {
-        //     sourceMap: true
-        //   }
-        // }, {
-        //   loader: "less-loader",
-        //   options: {
-        //     lessOptions: {
-        //       javascriptEnabled: true,
-        //     },
-        //     sourceMap: true
-        //   }
-        // }]
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -140,6 +86,12 @@ module.exports = {
                 },
                 javascriptEnabled: true,
               },
+            }
+          },
+          {
+            loader: "style-resources-loader",
+            options: {
+              patterns: path.resolve(__dirname, '../src/styles/variable.less')
             }
           }
         ]

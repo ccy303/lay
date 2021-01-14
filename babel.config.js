@@ -21,8 +21,8 @@ module.exports = function (api) {
     }, "caihrc"],
     ["react-css-modules", { // 达到类似vue的scoped效果
       filetypes: {
-        '.scss': {
-          syntax: 'postcss-scss',
+        '.less': {
+          syntax: 'postcss-less',
           plugins: [
             'postcss-nested',
           ],

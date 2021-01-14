@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, Modal, Form, Input, Dropdown, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-
-import './styles.scss';
+import './styles.less';
 
 const Header = ({ toggle, collapsed, CommonStore }) => {
   const [changePwdModel, setChangePwdModel] = useState(false);

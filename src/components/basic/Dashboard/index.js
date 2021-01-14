@@ -5,7 +5,7 @@ import Footer from '../Footer';
 import { Layout, Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 import { MenuContext } from '@src/routes/PermissionRoute';
-import './styles.scss';
+import './styles.less';
 
 const LayoutUI = props => {
   const { orgName, userName, phoneNum } = props;

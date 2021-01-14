@@ -1,18 +1,15 @@
-/* global __dirname */
 const path = require('path');
 const webpack = require('webpack');
-// const Fiber = require('fibers');
 const cfg = require('./index');
-const svgr = require('@svgr/webpack')
-// webpack 配置
+console.log(path.join(__dirname, '../dist'));
 module.exports = {
   mode: 'development',
   entry: {
     app: ['./src/index.js']
   },
   output: {
-    path: path.join(__dirname, '../static'), // 出口目录，dist文件
-    publicPath: "/static/",
+    path: path.join(__dirname, '../dist'), // 出口目录，dist文件
+    publicPath: "/dist/",
     filename: 'js/[name].js',
     chunkFilename: 'js/[name].chunk.js'
   },
@@ -23,41 +20,6 @@ module.exports = {
         test: /\.js$/,
         // exclude: /node_modules/,
         use: ['babel-loader', 'eslint-loader']
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]-[hash:base64:10]',
-                getLocalIdent: (context, localIdentName, localName) => {
-                  const path = context._module.context;
-                  if (/^((?!node_modules).)*(src){1}.*(components){1}.*$/.test(path)) {
-                    return;
-                  } else {
-                    return localName;
-                  }
-                },
-              },
-            },
-          },
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              implementation: require('sass'), // 使用dart-sass去编译
-              // fiber: Fiber // 同步的库，使用dart-sass同步编译的速度是异步编译的2倍
-            }
-          }, {
-            loader: 'sass-resources-loader', // 全局scss变量插件
-            options: {
-              resources: path.join(__dirname, '../src/styles/variable.scss')
-            }
-          }
-        ]
       },
       {
         test: /\.css$/,
@@ -116,6 +78,12 @@ module.exports = {
                 javascriptEnabled: true,
               },
             }
+          },
+          {
+            loader: "style-resources-loader",
+            options: {
+              patterns: path.resolve(__dirname, '../src/styles/variable.less')
+            }
           }
         ]
       },
@@ -156,17 +124,17 @@ module.exports = {
   devServer: {
     port: cfg.webport, // 端口
     host: 'localhost',
-    historyApiFallback: {
-      disableDotRule: true
-    },
-    compress: true,
     hot: true,
-    // 反代配置
-    proxy: {
-      '/admin': {
-        target: cfg.apiHost,
-        changeOrigin: true
-      }
-    }
+    // historyApiFallback: {
+    //   disableDotRule: true
+    // },
+    // compress: true,
+    // // 反代配置
+    // proxy: {
+    //   '/admin': {
+    //     target: cfg.apiHost,
+    //     changeOrigin: true
+    //   }
+    // }
   }
 };
