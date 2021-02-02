@@ -42,13 +42,20 @@ export const routes = [
     loginAuth: true,
     wrappers: [DashboardComponents],
     component: Home,
+    breadcrumbs: [
+      { path: "", title: "空连接" },
+      { path: "http://www.baidu.com", title: "禁用链接", canBreadcrumb: false },
+      { path: "http://www.baidu.com", title: "外部链接-百度(新窗口打开)", newWindow: true, canBreadcrumb: true },
+      { path: "http://www.douyu.com", title: "外部链接-斗鱼", canBreadcrumb: true },
+      { path: "/home", title: "内部链接", canBreadcrumb: true },
+    ]
   },
   {
     title: "二级路由集合",
     menu: true,
     path: "/singlePage",
     userAuth: ['order:check'],
-    canBreadcrumb: true,
+    canBreadcrumb: false,
     loginAuth: true,
     component: DashboardComponents,
     childrens: [{
@@ -71,7 +78,7 @@ export const routes = [
     path: "/multistage",
     title: "三级路由集合",
     menu: true,
-    canBreadcrumb: true,
+    canBreadcrumb: false,
     loginAuth: true,
     component: DashboardComponents,
     childrens: [{
@@ -86,11 +93,12 @@ export const routes = [
         component: Page1,
       }],
     }]
-  }, {
+  },
+  {
     title: "非菜单路由",
     menu: true,
     path: "/noMenuRoute",
-    canBreadcrumb: true,
+    canBreadcrumb: false,
     loginAuth: true,
     component: DashboardComponents,
     childrens: [{

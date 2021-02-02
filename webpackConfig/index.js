@@ -4,5 +4,5 @@ module.exports = {
   // prefix: '/api',
   // apiPath,
   webport: '20024',
-  titleSuffix: ' - 中国东信',
+  titleSuffix: ' - 平台名称',
 };

@@ -33,11 +33,31 @@ const LayoutUI = props => {
         <Layout>
           <Layout.Header styleName="breadcrumb-header">
             <Breadcrumb separator=">">
-              {context.ACTIVE_ROUTE?.map((v, i) => {
-                return <Breadcrumb.Item key={v.path}>
-                  {i === 0 && !v.canBreadcrumb ? v.title : <Link to={v.path}>{v.title}</Link>}
-                </Breadcrumb.Item>;
-              })}
+              {
+                context.ACTIVE_ROUTE?.slice(-1)[0]?.breadcrumbs?.length ?
+                  <>
+                    {context.ACTIVE_ROUTE?.slice(-1)[0]?.breadcrumbs?.map(v => {
+                      return <Breadcrumb.Item key={v.path}>
+                        {(() => {
+                          if (!v.path || !v.canBreadcrumb) { return v.title; }
+                          if (/^(www|https:\/\/|http:\/\/)/.test(v.path)) {
+                            return <a href={v.path} target={v.newWindow ? '_block' : ''} >{v.title}</a>;
+                          } else {
+                            return <Link to={v.path}>{v.title}</Link>;
+                          }
+                        })()}
+                        {/* {v.path ? <Link to={v.path}>{v.title}</Link> : v.title} */}
+                      </Breadcrumb.Item>;
+                    })}
+                  </> :
+                  <>
+                    {context.ACTIVE_ROUTE?.map((v, i) => {
+                      return <Breadcrumb.Item key={v.path}>
+                        {i === 0 && !v.canBreadcrumb ? v.title : <Link to={v.path}>{v.title}</Link>}
+                      </Breadcrumb.Item>;
+                    })}
+                  </>
+              }
             </Breadcrumb>
           </Layout.Header>
           <Layout.Content styleName="content">

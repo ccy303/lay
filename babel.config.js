@@ -18,6 +18,10 @@ module.exports = function (api) {
       libraryName: 'antd',
       // libraryDirectory: 'es',
       style: true
+    }, "antd"],
+    ["import", {
+      libraryName: "caihrc",
+      style: true
     }, "caihrc"],
     ["react-css-modules", { // 达到类似vue的scoped效果
       filetypes: {
