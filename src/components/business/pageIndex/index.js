@@ -110,7 +110,7 @@ export default (props) => {
           <Button onClick={confirm3}>函数式调用</Button>
           <div style={{ margin: "10px 0" }}>CModal 提供 confirm() 函数打开单个confirm 对话框</div>
         </Panel>
-        <Panel></Panel>
+        <Panel key={2}></Panel>
       </Collapse>
       {/* <Descriptions title="CUpload">
 				<Descriptions.Item>

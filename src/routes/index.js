@@ -110,6 +110,14 @@ export const routes = [
           },
         ],
       },
+      {
+        path: "/noAuth",
+        title: "无权限路由",
+        menu: true,
+        loginAuth: true,
+        auths: ["auth4", "auth2 & auth3"],
+        component: load(() => import("../components/business/home")),
+      },
     ],
   },
 ];

@@ -4,7 +4,7 @@ export const getUser = () => {
     setTimeout(() => {
       resolve({
         userInfo: { phone: "phone****" },
-        auth: ["auth1", "auth2"],
+        auth: ["auth1", "auth2", "auth3"],
       });
       // reject("err");
     }, 1000);

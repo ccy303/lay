@@ -15,7 +15,6 @@
 		"compression": "^1.7.4",
 		"core-js": "^3.21.1",
 		"nprogress": "^0.2.0",
-
 		"regenerator-runtime": "^0.13.9"
 	},
 	"devDependencies": {

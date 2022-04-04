@@ -1,40 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useLocation, useParams, useResolvedPath, matchPath, resolvePath } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation, matchPath } from "react-router-dom";
 import { useLocalObservable, observer } from "mobx-react-lite";
 import { Menu } from "antd";
 import routes from "@src/routes";
 import "./styles.less";
 const { SubMenu } = Menu;
-
-// 权限判断
-const chakoutAuth = (rAuth) => {
-  // if (!userAuth) return false;
-  // for (let i = 0, len = rAuth.length; i < len; i++) {
-  //   if (userAuth.includes(rAuth[i])) {
-  //     return true;
-  //   }
-  // }
-  return false;
-};
-
-const getMenu = (routes, menu = [], path = "") => {
-  routes.forEach((route) => {
-    if (route.menu) {
-      const menuITem = {
-        path: `${path}${route.path}`,
-        title: route.title,
-      };
-      if (route.childrens?.length) {
-        menuITem.childrens = [];
-        getMenu(route.childrens, menuITem.childrens, menuITem.path);
-      }
-      menu.push(menuITem);
-    } else if (route.childrens?.length) {
-      getMenu(route.childrens, menu, route.path);
-    }
-  });
-  return menu;
-};
 
 const getOpenKeys = (path) => {
   const arr = path.split("/").filter((v) => v);
@@ -65,11 +35,56 @@ const getActiveMenu = (route, path, join) => {
 const MenuCom = observer((props) => {
   const location = useLocation();
   const { targetRoute } = props;
+  const { g_userAuth } = props.gStore;
   const store = useLocalObservable(() => ({
     menus: [],
     openKeys: getOpenKeys(location.pathname),
     activeKeys: [`${getActiveMenu(targetRoute, location.pathname)}`],
   }));
+
+  // 权限判断
+  const checkAuth = (auth) => {
+    if (!auth) {
+      return true;
+    }
+    for (let i = 0; i < auth.length; i++) {
+      const arr = auth[i].split("&");
+      let flag = 0;
+      for (let j = 0; j < arr.length; j++) {
+        g_userAuth.includes(arr[j].trim()) && flag++;
+        if (flag == j + 1) {
+          return true;
+        }
+      }
+      if (i == auth.length) {
+        return false;
+      }
+    }
+    return false;
+  };
+
+  const getMenu = (routes, menu = [], path = "") => {
+    routes.forEach((route) => {
+      if (route.auths && !checkAuth(route.auths)) {
+        return;
+      }
+      if (route.menu) {
+        const menuITem = {
+          path: `${path}${route.path}`,
+          title: route.title,
+        };
+        if (route.childrens?.length) {
+          menuITem.childrens = [];
+          getMenu(route.childrens, menuITem.childrens, menuITem.path);
+        }
+        menu.push(menuITem);
+      } else if (route.childrens?.length) {
+        getMenu(route.childrens, menu, route.path);
+      }
+    });
+    return menu;
+  };
+
   const onOpenChange = (e) => {
     store.openKeys = Array.from(new Set([...e]));
   };
