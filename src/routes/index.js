@@ -27,28 +27,19 @@ const routes = [
         menu: true,
         logined: true,
         component: load(() => import("../components/business/pageIndex")),
-        breadcrumbs: [
+        breadcrumb: [
           { path: "", title: "空连接" },
-          { path: "http://www.baidu.com", title: "禁用链接", canBreadcrumb: false },
-          {
-            path: "http://www.baidu.com",
-            title: "外部链接-百度(新窗口打开)",
-            newWindow: true,
-            canBreadcrumb: true,
-          },
-          {
-            path: "http://www.douyu.com",
-            title: "外部链接-斗鱼",
-            canBreadcrumb: true,
-          },
-          { path: "/home", title: "内部链接", canBreadcrumb: true },
+          { path: "http://www.baidu.com", title: "禁用链接" },
+          { path: "http://www.baidu.com", title: "外部链接-百度(新窗口打开)", target: "_block" },
+          { path: "http://www.douyu.com", title: "外部链接-斗鱼" },
+          { path: "/home", title: "内部链接" },
         ],
       },
       {
         title: "二级路由集合",
         menu: true,
         path: "/singlePage",
-        canBreadcrumb: false,
+        breadcrumb: false,
         logined: true,
         children: [
           {
@@ -69,7 +60,7 @@ const routes = [
         path: "/multistage",
         title: "三级路由集合",
         menu: true,
-        canBreadcrumb: false,
+        breadcrumb: false,
         logined: true,
         children: [
           {
@@ -91,7 +82,7 @@ const routes = [
         title: "非菜单路由",
         menu: true,
         path: "/noMenuRoute",
-        canBreadcrumb: false,
+        breadcrumb: false,
         logined: true,
         children: [
           {
@@ -129,10 +120,18 @@ const routes = [
 ];
 
 const format = (route, reset = { logined: false }) => {
-  const _route = { ...reset, ...route, fullPathName: `${reset.fullPathName || ""}${route.path}` };
+  const _route = {
+    breadcrumb: !!route.component,
+    ...reset,
+    ...route,
+    fullPathName: `${reset.fullPathName || ""}${route.path}`,
+  };
   if (_route.children) {
     for (let i = 0; i < _route.children.length; i++) {
-      _route.children[i] = format(_route.children[i], { logined: _route.logined || false, fullPathName: _route.fullPathName });
+      _route.children[i] = format(_route.children[i], {
+        logined: _route.logined || false,
+        fullPathName: _route.fullPathName,
+      });
     }
   }
   return _route;

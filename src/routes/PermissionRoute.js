@@ -5,8 +5,7 @@ import { getUser } from "@src/http/public";
 import NoMatch from "@base/noMatch";
 import { checkAuth, getActiveRoute, findRoute } from "@utils/index";
 import { useLocalObservable, Observer } from "mobx-react-lite";
-import { HashRouter, Routes, Route, useNavigate, Outlet, useLocation, Navigate, resolvePath, useResolvedPath } from "react-router-dom";
-
+import { HashRouter, Routes, Route, useNavigate, Outlet, useLocation, Navigate } from "react-router-dom";
 const renderRoute = (routes) => {
   return (
     <>
@@ -28,6 +27,7 @@ const renderRoute = (routes) => {
             </>
           );
         };
+
         if (!children) {
           if (Layout) {
             return (

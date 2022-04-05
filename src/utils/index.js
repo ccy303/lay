@@ -72,3 +72,19 @@ export const findRoute = (routes, keys, vals) => {
   }
   return out;
 };
+
+export const getBread = (route, path, out = []) => {
+  const arr = path.split("/");
+  for (let i = 0; i < arr.length - 1; i++) {
+    const _path = arr.slice(0, i + 2).join("/");
+    if (route.breadcrumb && (route.path == _path || matchPath(route.fullPathName, _path))) {
+      out.push({ title: route.title, path: _path });
+    }
+  }
+  if (route.children) {
+    for (let i = 0; i < route.children.length; i++) {
+      getBread(route.children[i], path, out);
+    }
+  }
+  return out;
+};

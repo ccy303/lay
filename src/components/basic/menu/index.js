@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useLocation, matchPath } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalObservable, observer } from "mobx-react-lite";
 import { Menu } from "antd";
 import routes from "@src/routes";
@@ -19,6 +19,7 @@ const getOpenKeys = (path) => {
 
 const MenuCom = observer((props) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { targetRoute } = props;
   const { g_userAuth, g_userInfo } = props.gStore;
   const store = useLocalObservable(() => ({
@@ -26,6 +27,10 @@ const MenuCom = observer((props) => {
     openKeys: getOpenKeys(location.pathname),
     activeKeys: [`${getActiveRoute(targetRoute, location.pathname)?.path}`],
   }));
+
+  useEffect(() => {
+    store.activeKeys = [`${getActiveRoute(targetRoute, location.pathname)?.path}`];
+  }, [location]);
 
   const getMenu = (routes, menu = [], path = "") => {
     routes.forEach((route) => {
@@ -56,6 +61,10 @@ const MenuCom = observer((props) => {
     store.openKeys = Array.from(new Set([...e]));
   };
 
+  const linkTo = (to) => {
+    navigate(to);
+  };
+
   const renderMenu = (menus) => {
     return (
       <>
@@ -66,9 +75,13 @@ const MenuCom = observer((props) => {
             </SubMenu>
           ) : (
             <Menu.Item key={item.path}>
-              <Link to={item.path}>
+              <a
+                onClick={() => {
+                  linkTo(item.path);
+                }}
+              >
                 <span>{item.title}</span>
-              </Link>
+              </a>
             </Menu.Item>
           );
         })}
