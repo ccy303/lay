@@ -1,39 +1,21 @@
-.no-match-wrap {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+.wrap {
   height: 100%;
   width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   background-image: url("~@src/images/bg_notFound.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100%;
-  section {
-    position: absolute;
-    top: 48%;
-    left: 55%;
-    margin: -103px 0 0 -120px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    h1 {
-      color: @primary-color;
-      font-weight: 500;
-      font-size: 120px;
-      height: 81px;
-    }
-    p {
-      color: #314659;
-      font-size: 18px;
-      a {
-        transition: color 0.3s ease;
-        &:hover {
-          color: #40a9ff;
-        }
-      }
-    }
+  .first-title {
+    font-size: 120px;
+    font-weight: 600;
+    color: #e12936;
+  }
+  .second-title {
+    font-size: 20px;
+    color: #333;
   }
 }

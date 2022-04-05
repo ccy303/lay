@@ -3,6 +3,7 @@ import { Link, useLocation, matchPath } from "react-router-dom";
 import { useLocalObservable, observer } from "mobx-react-lite";
 import { Menu } from "antd";
 import routes from "@src/routes";
+import { checkAuth, getActiveRoute } from "@utils/index";
 import "./styles.less";
 const { SubMenu } = Menu;
 
@@ -16,56 +17,22 @@ const getOpenKeys = (path) => {
   return out;
 };
 
-const getActiveMenu = (route, path, join) => {
-  let out = "";
-  const _path = `${join || ""}${route.path}`;
-  if (matchPath(_path, path)) {
-    out = route.activePath || _path;
-  } else if (route.childrens) {
-    for (let i = 0; i < route.childrens.length; i++) {
-      out = getActiveMenu(route.childrens[i], path, _path);
-      if (out) {
-        break;
-      }
-    }
-  }
-  return out;
-};
-
 const MenuCom = observer((props) => {
   const location = useLocation();
   const { targetRoute } = props;
-  const { g_userAuth } = props.gStore;
+  const { g_userAuth, g_userInfo } = props.gStore;
   const store = useLocalObservable(() => ({
     menus: [],
     openKeys: getOpenKeys(location.pathname),
-    activeKeys: [`${getActiveMenu(targetRoute, location.pathname)}`],
+    activeKeys: [`${getActiveRoute(targetRoute, location.pathname)?.path}`],
   }));
-
-  // 权限判断
-  const checkAuth = (auth) => {
-    if (!auth) {
-      return true;
-    }
-    for (let i = 0; i < auth.length; i++) {
-      const arr = auth[i].split("&");
-      let flag = 0;
-      for (let j = 0; j < arr.length; j++) {
-        g_userAuth.includes(arr[j].trim()) && flag++;
-        if (flag == j + 1) {
-          return true;
-        }
-      }
-      if (i == auth.length) {
-        return false;
-      }
-    }
-    return false;
-  };
 
   const getMenu = (routes, menu = [], path = "") => {
     routes.forEach((route) => {
-      if (route.auths && !checkAuth(route.auths)) {
+      if (route.auths && !checkAuth(route.auths, g_userAuth)) {
+        return;
+      }
+      if (route.logined && !g_userInfo) {
         return;
       }
       if (route.menu) {
@@ -73,13 +40,13 @@ const MenuCom = observer((props) => {
           path: `${path}${route.path}`,
           title: route.title,
         };
-        if (route.childrens?.length) {
-          menuITem.childrens = [];
-          getMenu(route.childrens, menuITem.childrens, menuITem.path);
+        if (route.children?.length) {
+          menuITem.children = [];
+          getMenu(route.children, menuITem.children, menuITem.path);
         }
         menu.push(menuITem);
-      } else if (route.childrens?.length) {
-        getMenu(route.childrens, menu, route.path);
+      } else if (route.children?.length) {
+        getMenu(route.children, menu, route.path);
       }
     });
     return menu;
@@ -93,9 +60,9 @@ const MenuCom = observer((props) => {
     return (
       <>
         {menus.map((item, i) => {
-          return item.childrens?.length ? (
+          return item.children?.length ? (
             <SubMenu key={item.path} title={<span>{item.title}</span>}>
-              {renderMenu(item.childrens)}
+              {renderMenu(item.children)}
             </SubMenu>
           ) : (
             <Menu.Item key={item.path}>

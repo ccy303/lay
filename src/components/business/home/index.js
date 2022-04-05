@@ -7,7 +7,7 @@ export default (props) => {
   return (
     <Layout className={style.warp}>
       <Layout.Header className={style.header}>
-        <Header />
+        <Header {...props} />
       </Layout.Header>
       <Layout>
         <Layout.Content className={style.content}>

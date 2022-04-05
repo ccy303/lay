@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import Header from "../header";
 import Menu from "../menu";
 import { Layout, Breadcrumb } from "antd";
-// import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 import style from "./styles.less";
 
@@ -10,7 +9,7 @@ const LayoutUI = (props) => {
   return (
     <Layout className={style.warp}>
       <Layout.Header className={style.header}>
-        <Header />
+        <Header {...props} />
       </Layout.Header>
       <Layout>
         <Layout.Sider className={style.sider}>
