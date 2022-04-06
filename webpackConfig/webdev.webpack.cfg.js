@@ -1,11 +1,11 @@
 const path = require("path");
-const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 
 module.exports = {
   mode: "development",
+  target: ["web", "es5"],
   entry: {
     app: ["./src/index.js"],
   },
@@ -15,6 +15,7 @@ module.exports = {
     filename: "js/[name].js",
     chunkFilename: "js/[name].chunk.js",
   },
+
   devtool: "cheap-module-source-map",
   module: {
     rules: [
@@ -33,11 +34,7 @@ module.exports = {
                 localIdentName: "[local]-[hash:base64:10]",
                 getLocalIdent: (context, localIdentName, localName) => {
                   const path = context._module.context;
-                  if (
-                    /^((?!node_modules).)*(src){1}.*(components){1}.*$/.test(
-                      path
-                    )
-                  ) {
+                  if (/^((?!node_modules).)*(src){1}.*(components){1}.*$/.test(path)) {
                     return;
                   } else {
                     return localName;
@@ -60,11 +57,7 @@ module.exports = {
                 localIdentName: "[local]-[hash:base64:10]",
                 getLocalIdent: (context, localIdentName, localName) => {
                   const path = context._module.context;
-                  if (
-                    /^((?!node_modules).)*(src){1}.*(components){1}.*$/.test(
-                      path
-                    )
-                  ) {
+                  if (/^((?!node_modules).)*(src){1}.*(components){1}.*$/.test(path)) {
                     return;
                   } else {
                     return localName;

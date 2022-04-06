@@ -8,7 +8,6 @@
 		"pre-lint": "eslint src --ext .js --cache --fix"
 	},
 	"dependencies": {
-		"@babel/runtime": "^7.17.8",
 		"@loadable/component": "^5.15.2",
 		"antd": "^4.19.3",
 		"axios": "^0.26.1",
@@ -27,6 +26,7 @@
 		"@babel/plugin-transform-runtime": "^7.17.0",
 		"@babel/preset-env": "^7.16.11",
 		"@babel/preset-react": "^7.16.7",
+		"@babel/runtime": "^7.17.8",
 		"autoprefixer": "^10.4.4",
 		"babel-eslint": "^10.0.2",
 		"babel-loader": "^8.2.4",

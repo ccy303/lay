@@ -1,7 +1,5 @@
-/* global __dirname */
 const path = require("path");
 const webpack = require("webpack");
-// const Fiber = require('fibers');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -111,6 +109,7 @@ module.exports = {
 			"@src": path.resolve(__dirname, "../", "src"),
 			"@base": path.resolve(__dirname, "../src/components/basic"),
 			"@utils": path.resolve(__dirname, "../src/utils"),
+      "@images": path.resolve(__dirname, "../src/images"),
 		},
 	},
 	plugins: [
@@ -139,17 +138,6 @@ module.exports = {
 		],
 		splitChunks: {
 			chunks: "all",
-		},
-	},
-	devServer: {
-		port: 3456, // 端口
-		host: "localhost",
-		hot: true,
-		devMiddleware: {
-			writeToDisk: true,
-		},
-		client: {
-			progress: true,
 		},
 	},
 };

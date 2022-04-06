@@ -4,6 +4,7 @@ import { configure } from "mobx";
 import "./app.less";
 configure({
   enforceActions: "never",
+  // useProxies: "never",
 });
 const App = (props) => {
   return <PermissionRoute />;
