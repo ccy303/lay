@@ -83,10 +83,10 @@ const Main = () => {
     (async () => {
       try {
         const res = await getUser();
-        store.state = true;
         gStore.g_userInfo = res.userInfo;
         gStore.g_userAuth = res.auth;
         location.pathname === "/" && navigate("home");
+        store.state = true;
       } catch (err) {
         store.state = true;
         for (let i = 0; i < routes.length; i++) {

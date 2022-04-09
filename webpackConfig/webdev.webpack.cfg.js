@@ -120,7 +120,7 @@ module.exports = {
     },
   },
   devServer: {
-    port: 2325, // 端口
+    port: 12325, // 端口
     host: "localhost",
     hot: true,
     devMiddleware: {
