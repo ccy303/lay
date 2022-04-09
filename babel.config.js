@@ -15,11 +15,6 @@ module.exports = function (api) {
     ],
   ];
   const plugins = [
-    // "@babel/plugin-transform-runtime",
-    // ["@babel/plugin-proposal-decorators", { legacy: true }],
-    // "@babel/plugin-proposal-class-properties", // class的方法可以用箭头函数自动bind this
-    // "@babel/plugin-proposal-nullish-coalescing-operator",
-    // "@babel/plugin-proposal-optional-chaining",
     [
       "import",
       {
@@ -31,10 +26,8 @@ module.exports = function (api) {
   ];
   const ignore = [
     (filename) => {
-      if (/^(((?!node_modules).)*(js|jsx|ts|tsx))|(.*(node_modules).*(react-router.*|react.*|mobx.*|webpack.*).*(\.js)$)/.test(filename)) {
-        // console.log("babel:", filename);
-      }
-      return !/^(((?!node_modules).)*(js|jsx|ts|tsx))|(.*(node_modules).*(react-router.*|react.*|mobx.*|webpack.*).*(\.js)$)/.test(filename);
+      return !/^(((?!node_modules).)*(js|jsx|ts|tsx))/.test(filename);
+      // return !/^(((?!node_modules).)*(js|jsx|ts|tsx))|(.*(node_modules).*().*(\.js)$)/.test(filename);
     },
   ];
   return {
