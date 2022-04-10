@@ -6,6 +6,7 @@ class Global {
 
   g_userInfo = null;
   g_userAuth = [];
+  g_menu = [];
 }
 
 export default new Global();

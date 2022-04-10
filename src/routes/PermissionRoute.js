@@ -6,6 +6,12 @@ import NoMatch from "@base/noMatch";
 import { checkAuth, getActiveRoute, findRoute } from "@utils/index";
 import { useLocalObservable, Observer } from "mobx-react-lite";
 import { HashRouter, Routes, Route, useNavigate, Outlet, useLocation, Navigate } from "react-router-dom";
+
+// 模拟后端返回路由
+const getMenu = async () => {
+  return Promise.resolve(routes);
+};
+
 const renderRoute = (routes) => {
   return (
     <>
@@ -61,15 +67,36 @@ const renderRoute = (routes) => {
 };
 
 const PermissionRoute = (props) => {
+  const store = useLocalObservable(() => ({
+    state: false,
+  }));
+  useEffect(() => {
+    (async () => {
+      gStore.g_menu = await getMenu();
+      store.state = true;
+    })();
+  }, []);
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Main />}>
-          {renderRoute(routes)}
-          <Route path="*" element={<NoMatch />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <Observer>
+      {() => {
+        console.log(store.state);
+        return (
+          <>
+            {store.state && (
+              <HashRouter>
+                <Routes>
+                  <Route path="/" element={<Main />}>
+                    {renderRoute(gStore.g_menu)}
+                    {/* {renderRoute(routes)} */}
+                    <Route path="*" element={<NoMatch />} />
+                  </Route>
+                </Routes>
+              </HashRouter>
+            )}
+          </>
+        );
+      }}
+    </Observer>
   );
 };
 
@@ -89,11 +116,11 @@ const Main = () => {
         store.state = true;
       } catch (err) {
         store.state = true;
-        for (let i = 0; i < routes.length; i++) {
-          const res = getActiveRoute(routes[i], location.pathname);
+        for (let i = 0; i < gStore.g_menu.length; i++) {
+          const res = getActiveRoute(gStore.g_menu[i], location.pathname);
           if (res) {
             const target = findRoute(
-              routes.filter((v) => v.path !== "/login"),
+              gStore.g_menu.filter((v) => v.path !== "/login"),
               "logined",
               false
             );

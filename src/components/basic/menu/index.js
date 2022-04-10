@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLocalObservable, observer } from "mobx-react-lite";
 import { Menu } from "antd";
-import routes from "@src/routes";
 import { checkAuth, getActiveRoute } from "@utils/index";
 import "./styles.less";
 const { SubMenu } = Menu;
@@ -21,7 +20,7 @@ const MenuCom = observer((props) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { targetRoute } = props;
-  const { g_userAuth, g_userInfo } = props.gStore;
+  const { g_userAuth, g_userInfo, g_menu } = props.gStore;
   const store = useLocalObservable(() => ({
     menus: [],
     openKeys: getOpenKeys(location.pathname),
@@ -90,7 +89,7 @@ const MenuCom = observer((props) => {
   };
 
   useEffect(() => {
-    store.menus = getMenu(routes);
+    store.menus = getMenu(g_menu);
   }, []);
 
   return (
